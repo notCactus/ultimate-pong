@@ -1,4 +1,8 @@
+mod pong;
+
+use crate::pong::Pong;
 use amethyst::{
+    core::TransformBundle,
     prelude::*,
     renderer::{
         plugins::{RenderFlat2D, RenderToWindow},
@@ -6,12 +10,7 @@ use amethyst::{
         RenderingBundle,
     },
     utils::application_root_dir,
-    core::transform::TransformBundle,
 };
-
-mod pong;
-
-use crate::pong::Pong;
 fn main() -> amethyst::Result<()> {
     // Logger
     amethyst::start_logger(Default::default());
@@ -28,7 +27,7 @@ fn main() -> amethyst::Result<()> {
         RenderingBundle::<DefaultBackend>::new()
             // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
             .with_plugin(
-                RenderToWindow::from_config_path(display_config_path)
+                RenderToWindow::from_config_path(display_config_path)?
                     .with_clear([0.0, 0.0, 0.0, 1.0]),
             )
             // RenderFlat2D plugin is used to render entities with a `SpriteRender` component.

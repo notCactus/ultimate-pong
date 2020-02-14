@@ -1,5 +1,5 @@
 use amethyst::{
-    assets::{AssetStorage, Loader, Handle},
+    assets::{AssetStorage, Handle, Loader},
     core::transform::Transform,
     ecs::prelude::{Component, DenseVecStorage},
     prelude::*,
@@ -92,8 +92,7 @@ fn initialise_camera(world: &mut World) {
 }
 
 /// Initialises one paddle on the left, and one paddle on the right.
-fn initialise_paddles(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
-
+fn initialise_paddles(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let mut left_transform = Transform::default();
     let mut right_transform = Transform::default();
 
@@ -104,7 +103,7 @@ fn initialise_paddles(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 
     // Assign the sprites for the paddles
     let sprite_render = SpriteRender {
-        sprite_sheet: sprite_sheet.clone(),
+        sprite_sheet: sprite_sheet_handle,
         sprite_number: 0, // paddle is the first sprite in the sprite_sheet
     };
 
@@ -119,7 +118,7 @@ fn initialise_paddles(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
     // Create right plank entity.
     world
         .create_entity()
-        .with(sprite_render.clone())
+        .with(sprite_render)
         .with(Paddle::new(Side::Right))
         .with(right_transform)
         .build();
