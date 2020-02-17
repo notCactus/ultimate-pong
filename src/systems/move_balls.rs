@@ -24,4 +24,4 @@ impl<'s> System<'s> for MoveBallsSystem {
             local.prepend_translation_y(ball.velocity[1] * time.delta_seconds());
         }
     }
-}   
+}

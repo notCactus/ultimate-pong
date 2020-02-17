@@ -1,14 +1,14 @@
 use amethyst::{
-    core::{Transform},
-    ecs::prelude::{Join, ReadStorage, System, WriteStorage},
     assets::AssetStorage,
     audio::{output::Output, Source},
+    core::Transform,
+    ecs::prelude::{Join, ReadStorage, System, WriteStorage},
     ecs::{Read, ReadExpect},
 };
 
-use std::ops::Deref;
 use crate::audio::{play_bounce_sound, Sounds};
-use crate::pong::{Ball, Side, Paddle, ARENA_HEIGHT};
+use crate::pong::{Ball, Paddle, Side, ARENA_HEIGHT};
+use std::ops::Deref;
 
 pub struct BounceSystem;
 
@@ -64,7 +64,11 @@ impl<'s> System<'s> for BounceSystem {
                         || (paddle.side == Side::Right && ball.velocity[0] > 0.0)
                     {
                         ball.velocity[0] = -ball.velocity[0];
-                        play_bounce_sound(&*sounds, &storage, audio_output.as_ref().map(|o| o.deref()));
+                        play_bounce_sound(
+                            &*sounds,
+                            &storage,
+                            audio_output.as_ref().map(|o| o.deref()),
+                        );
                     }
                 }
             }

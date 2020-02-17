@@ -1,10 +1,11 @@
+mod audio;
 mod pong;
 mod systems;
-mod audio;
 
-use crate::pong::Pong;
 use crate::audio::Music;
+use crate::pong::Pong;
 use amethyst::{
+    audio::{AudioBundle, DjSystemDesc},
     core::TransformBundle,
     input::{InputBundle, StringBindings},
     prelude::*,
@@ -13,9 +14,8 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
-    utils::application_root_dir,
     ui::{RenderUi, UiBundle},
-    audio::{AudioBundle, DjSystemDesc},
+    utils::application_root_dir,
 };
 fn main() -> amethyst::Result<()> {
     // Logger

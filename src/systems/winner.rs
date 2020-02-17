@@ -1,11 +1,11 @@
 use amethyst::{
+    assets::AssetStorage,
+    audio::{output::Output, Source},
     core::transform::Transform,
     derive::SystemDesc,
     ecs::prelude::{Join, ReadExpect, System, SystemData, Write, WriteStorage},
-    ui::UiText,
-    assets::AssetStorage,
-    audio::{output::Output, Source},
     ecs::Read,
+    ui::UiText,
 };
 
 use crate::audio::{play_score_sound, Sounds};
@@ -28,8 +28,9 @@ impl<'s> System<'s> for WinnerSystem {
         Option<Read<'s, Output>>,
     );
 
-
-    fn run(&mut self, (
+    fn run(
+        &mut self,
+        (
         mut balls,
         mut locals,
         mut ui_text,
@@ -38,7 +39,8 @@ impl<'s> System<'s> for WinnerSystem {
         storage,
         sounds,
         audio_output,
-    ): Self::SystemData)  {
+    ): Self::SystemData,
+    ) {
         for (ball, transform) in (&mut balls, &mut locals).join() {
             let ball_x = transform.translation().x;
 
