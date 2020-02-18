@@ -16,9 +16,10 @@ pub const ARENA_WIDTH: f32 = 100.0;
 pub const PADDLE_HEIGHT: f32 = 16.0;
 pub const PADDLE_WIDTH: f32 = 4.0;
 
-pub const BALL_VELOCITY_X: f32 = 75.0;
-pub const BALL_VELOCITY_Y: f32 = 50.0;
+pub const BALL_VELOCITY_X: f32 = 50.0;
+pub const BALL_VELOCITY_Y: f32 = 25.0;
 pub const BALL_RADIUS: f32 = 2.0;
+pub const BALL_SPEEDUP: f32 = 1.1;
 
 /// ScoreBoard contains the actual score data
 #[derive(Default)]
@@ -41,6 +42,7 @@ pub struct Pong {
 pub struct Ball {
     pub velocity: [f32; 2],
     pub radius: f32,
+    pub consecutive_hits: i32,
 }
 
 impl Component for Ball {
@@ -195,6 +197,7 @@ fn initialise_ball(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) 
         .with(Ball {
             radius: BALL_RADIUS,
             velocity: [BALL_VELOCITY_X, BALL_VELOCITY_Y],
+            consecutive_hits: 0,
         })
         .with(local_transform)
         .build();

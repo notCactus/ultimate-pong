@@ -4,10 +4,11 @@ use amethyst::{
     core::Transform,
     ecs::prelude::{Join, ReadStorage, System, WriteStorage},
     ecs::{Read, ReadExpect},
+    renderer::SpriteRender,
 };
 
 use crate::audio::{play_bounce_sound, Sounds};
-use crate::pong::{Ball, Paddle, Side, ARENA_HEIGHT};
+use crate::pong::{Ball, Paddle, Side, ARENA_HEIGHT, BALL_SPEEDUP};
 use std::ops::Deref;
 
 pub struct BounceSystem;
@@ -20,17 +21,19 @@ impl<'s> System<'s> for BounceSystem {
         Read<'s, AssetStorage<Source>>,
         ReadExpect<'s, Sounds>,
         Option<Read<'s, Output>>,
+        WriteStorage<'s, SpriteRender>,
     );
 
     fn run(
         &mut self,
-        (mut balls, paddles, transforms, storage, sounds, audio_output): Self::SystemData,
+        (mut balls, paddles, transforms, storage, sounds, audio_output, mut sprite_renderer): Self::SystemData,
     ) {
         // Check whether a ball collided, and bounce off accordingly.
         //
         // We also check for the velocity of the ball every time, to prevent multiple collisions
         // from occurring.
-        for (ball, transform) in (&mut balls, &transforms).join() {
+        for (ball, transform, sprite_renderer) in (&mut balls, &transforms, &mut sprite_renderer).join() {
+            
             let ball_x = transform.translation().x;
             let ball_y = transform.translation().y;
 
@@ -64,6 +67,21 @@ impl<'s> System<'s> for BounceSystem {
                         || (paddle.side == Side::Right && ball.velocity[0] > 0.0)
                     {
                         ball.velocity[0] = -ball.velocity[0];
+
+                        ball.consecutive_hits = ball.consecutive_hits + 1;
+
+                        println!("Consecutive hits: {}", ball.consecutive_hits);
+
+                        // Changes the ball's sprite based off consecutive hits
+                        if ball.consecutive_hits%4 == 3 {
+                            if sprite_renderer.sprite_number < 4 {
+                                sprite_renderer.sprite_number = sprite_renderer.sprite_number + 1;
+                            }
+                        }
+                        
+                        // Velocity is increased everytime someone hits the ball.
+                        ball.velocity[0] = ball.velocity[0]*BALL_SPEEDUP;
+
                         play_bounce_sound(
                             &*sounds,
                             &storage,
